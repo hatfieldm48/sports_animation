@@ -6,3 +6,7 @@ To try running this code, simply clone the repo, and ensure you have the librari
 
 From the cloned directory, running `python app.py` will create a local flask webapp where you can choose between these sample games, and then scroll through all the plays of that game to see each individual play animation.
 
+## What it Looks Like
+
+
+
