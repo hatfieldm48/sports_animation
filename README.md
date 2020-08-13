@@ -7,6 +7,6 @@ To try running this code, simply clone the repo, and ensure you have the librari
 From the cloned directory, running `python app.py` will create a local flask webapp where you can choose between these sample games, and then scroll through all the plays of that game to see each individual play animation.
 
 ## What it Looks Like
-
+Take a look at the [wiki homepage](https://github.com/hatfieldm48/sports_animation/wiki) to see a gif video of what the animation looks like. You can hover over a player's icon to see the name. You can also click on that player to display a full play track of their location, along with a visualization of the closest player from the opposing team to them at all times.
 
 
