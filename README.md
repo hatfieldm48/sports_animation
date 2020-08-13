@@ -1,4 +1,4 @@
-# sports_animation
+# Sport Animation Overview
 A web application framework to visualize sports as a animation of player tracker data. The current build does this using a sample of data provided by the NFL NextGenStats from games during the 2018 season. To see a live version of this, you may try visiting this link, although if it is not responding, feel free to reach out to me as a I don't keep the ec2 instance it runs on up at all times.
 
 ## Installation and Use
