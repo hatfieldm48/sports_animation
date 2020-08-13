@@ -1,0 +1,110 @@
+html {
+    height:100%;
+}
+body {
+	/*height: 100%;
+	display: flex;
+	flex-direction: column;*/
+	background-color: #F9F7F7;
+}
+
+.btn-play {
+	margin-bottom: 10px;
+}
+
+/*.footerobp {
+	background-color: #d4d4d4;
+	width: 100%;
+}*/
+
+.left{
+	/*background-color: red;*/
+	height: 100%;
+	overflow-y: scroll;
+}
+
+.main-chart {
+	/*width: 100%;
+	height: 100%;*/
+}
+
+.main-chart-title {
+	text-align: center;
+	font-size: 16pt;
+	margin-bottom: 10px;
+}
+
+.main-content {
+	margin: 20px;
+	height: 88%;
+}
+
+.main-results {
+	margin-top: 60px;
+}
+
+.main-results-submit {
+	margin-top: 10px;
+	/*float: right;*/
+}
+
+.play-list {
+	font-size: 10pt;
+}
+
+.right{
+  /*background-color: blue;*/
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.row-height{
+  /*height: 100vh;*/
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky + .content {
+  padding-top: 102px;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+  font-family: sans-serif;
+  /*position: fixed;
+  top: 0;*/
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #3d9bbd;
+  color: white;
+}
+
+/*Remove the scrollbar from Chrome, Safari, Edge and IE
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
+
+* {
+  -ms-overflow-style: none !important;
+}*/

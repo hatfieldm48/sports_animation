@@ -1,0 +1,63 @@
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+	<!-- Plotly.js -->
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<!-- jQuery library -->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+
+<body>
+	<header id="ngs-header" class="topnav sticky-top">
+		<a class="active" href="/">Player Tracking Visualization</a>
+		<a href="#news">Link 1</a>
+		<a href="#contact">Link 2</a>
+		<a href="#about">Link 3</a>
+		<a href="#">Test Javascript</a>
+	</header>
+	<div class="row main-content row-height">
+		<div class="col-md-3 left play-list" style="overflow-y: scroll;">
+			{% for play in plays_display %}
+			<button type="button" name='playselection' class="list-group-item list-group-item-action btn-play" 
+				value="play[0]" onclick="replot_play('{{ play[0] }}', '{{ play[1] }}')"> <!-- onclick="test_play_buttons('{{ play[0] }}')" -->
+				<!-- onclick="replot_play('{{ play[0] }}')" -->
+				{{ play[1] }}
+			</button>
+			{% endfor %}
+		</div>
+		<div class="col-md-9 right">
+			<div id="chart-title" class="main-chart-title">{{ play_to_viz_title }}</div>
+			<div id="football_field_cht" class="main-chart"><!-- Plotly chart will be drawn inside this DIV --></div>
+			<div id="football_subchart" class="sub-chart"><!-- sub charts for velocity and defender distance --></div>
+		</div>
+	</div>
+
+	<script>
+		/*Plotly.d3.csv('https://raw.githubusercontent.com/hatfieldm48/nfl_ngs/master/example_play.csv', function (err, data) {
+			plot_play(err, data);
+			alert(data);
+		});*/
+		plot_play('', '{{ play_to_viz | safe }}');
+	</script>
+	<script>
+	window.onscroll = function() {scrollFunction()};
+
+	var header = document.getElementById("ngs-header");
+	var sticky = header.offsetTop;
+
+	function scrollFunction() {
+		if (window.pageYOffset > sticky) {
+			header.classList.add("sticky");
+		} else {
+			header.classList.remove("sticky");
+		}
+	}
+	</script>
+</body>
