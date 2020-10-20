@@ -37,8 +37,13 @@ def watch_game():
 				quarter = list(play_info['quarter'].values())[0]
 				playId = list(play_info['playId'].values())[0]
 				gameClock = list(play_info['gameClock'].values())[0]
-				if gameClock=='nan': #if math.isnan(gameClock):
-					gameClock = 0
+				#print (play_info['gameClock'])
+				#print (gameClock)
+				#print (gameClock=='nan')
+				#if gameClock=='nan': #if math.isnan(gameClock):
+				if not (isinstance(gameClock, str)):
+					#print (math.isnan(gameClock))
+					gameClockSort = 0
 				else:
 					gameClockSort = (4-quarter)*15 + float(gameClock.split(':')[0]) + float(gameClock.split(':')[1])*(1.0/60.0)
 				plays_display.append([gameClockSort, 'Q' + str(quarter) + ' ' + play_description, game.split('/')[0] + '/' + play])
@@ -160,7 +165,7 @@ def select_game():
 		#Might run into issues with python dictionaries not being order, and it seems like I need to pass a dictionary 
 	# [ ] copy new code to plot_play over to replot_ply in main.js
 		#Might not need to do this since the code will only ever call plot_play now
-		
+
 	game_keys = list(game_plays.keys()) #game_keys = list(list_of_games)
 	game_values = [ngs_player_tracking.game_info_to_string(ngs_player_tracking.get_game_info_from_csv_name(df_games, '', x.split('/')[-1])) for x in game_keys]
 	#print (game_keys)
