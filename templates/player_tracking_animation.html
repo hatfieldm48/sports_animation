@@ -25,11 +25,18 @@
 	<div class="row main-content row-height">
 		<div class="col-md-3 left play-list" style="overflow-y: scroll;">
 			{% for play in plays_display %}
-			<button type="button" name='playselection' class="list-group-item list-group-item-action btn-play" 
-				value="play[0]" onclick="replot_play('{{ play[0] }}', '{{ play[1] }}')"> <!-- onclick="test_play_buttons('{{ play[0] }}')" -->
-				<!-- onclick="replot_play('{{ play[0] }}')" -->
-				{{ play[1] }}
-			</button>
+			<form action="/player-tracking-animation" method='POST'>
+				<!--<button type="button" name='playselection' class="list-group-item list-group-item-action btn-play" 
+					value="play[0]" onclick="replot_play('{{ play[0] }}', '{{ play[1] }}')"> 
+					!-- onclick="test_play_buttons('{{ play[0] }}')" --
+					!-- onclick="replot_play('{{ play[0] }}')" --
+					{{ play[1] }}
+				</button>-->
+				<button type="submit" name='playselection' class="list-group-item list-group-item-action" 
+					value="{{ play[0] }}">
+					{{ play[1] }}
+				</button>
+			</form>
 			{% endfor %}
 		</div>
 		<div class="col-md-9 right">

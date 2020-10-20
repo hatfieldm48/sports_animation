@@ -5,7 +5,9 @@
  */
 function replot_play (data, new_title) {
 	//alert (data);
+	console.log(data);
 	play_id = data.split('/')[data.split('/').length - 1];
+	console.log(play_id);
 	//alert (play_id);
 	console.log('https://raw.githubusercontent.com/hatfieldm48/nfl_ngs/master/play_json_files/' + play_id);
 
@@ -403,7 +405,11 @@ function replot_play (data, new_title) {
 function plot_play (err, data) {
 	// Create a lookup table to sort and regroup the columns of data,
 	// first by time, then by team
+	//console.log(data);
 	data = JSON.parse(data);
+	data_length = Object.keys(data['description']).length;
+	console.log(data_length);
+	console.log(data);
 	var title = '';
 
 	var lookup = {};
@@ -429,20 +435,29 @@ function plot_play (err, data) {
 	}
 
 	//Get the teams (and team colors) before defining the trace datasets
-	var teams = ['ball', 'home', 'away'];
-	var teams_nfl_full = [];
-	for (var i = 0; i < data.length; i++) {
+	//var teams = ['ball', 'home', 'away'];
+	var teams = ['football', 'home', 'away'];
+	//var teams_nfl_full = [];
+	var teams_nfl_full = Object.keys(data['team_nfl']).map(function(key){
+		return data['team_nfl'][key];
+	});
+	//console.log(data['team_nfl']);
+	//console.log(data['team_nfl'][15]);
+	//console.log(data_team_nfl);
+	/*for (var i = 0; i < data.length; i++) {
 		teams_nfl_full.push(data[i].team_nfl);
-	}
+	}*/
 	function onlyUnique(value, index, self) {
 		return self.indexOf(value) === index;
 	}
 	var teams_nfl = teams_nfl_full.filter(onlyUnique); //The order will always be Ball, Home, Away
+	console.log(teams_nfl);
 	var team_sizes = [1, 11, 11];
 	var colors = ['rgba(232, 213, 38, 0.7)', get_team_color(teams_nfl[1]), get_team_color(teams_nfl[2])]
 
 	// Go through each row, get the right trace, and append the data
-	for (var i = 0; i < data.length; i++) {
+	for (var i = 0; i < data_length; i++) {
+		/*
 		var datum = data[i];
 		var trace = getData(datum.time, datum.team);
 		trace.text.push(datum.player_id);
@@ -455,7 +470,19 @@ function plot_play (err, data) {
 		//trace.marker.line.push({color: 'rbga(51, 51, 51, 1)', width: 2});
 		trace.marker.line.color.push(colors[teams_nfl.indexOf(datum.team_nfl)]);
 		trace.marker.line.width.push(2);
-		title = datum.description;
+		title = datum.description;*/
+		var trace = getData(data['time'][i], data['team'][i]);
+		trace.text.push(data['player_id'][i]);
+		trace.team.push(data['team_nfl'][i]);
+		trace.id.push(data['uniqPlayId'][i]);
+		trace.x.push(data['x'][i]);
+		trace.y.push(data['y'][i]);
+		trace.marker.size.push(10);
+		trace.marker.sizemode.push('area');
+		//trace.marker.line.push({color: 'rbga(51, 51, 51, 1)', width: 2});
+		trace.marker.line.color.push(colors[teams_nfl.indexOf(data['team_nfl'][i])]);
+		trace.marker.line.width.push(2);
+		title = data['description'][i];
 	}
 
 	// Get the group names
@@ -813,38 +840,38 @@ function update_chart_title (new_title) {
  */
 function get_team_color (str_team_name) {
 	var team_colors = {
-		'Arizona Cardinals': 'rgba(135, 0, 39, 0.7)',
-		'Atlanta Falcons': 'rgba(163, 13, 45, 0.7)',
-		'Baltimore Ravens': 'rgba(26, 25, 95, 0.7)',
-		'Buffalo Bills': 'rgba(12, 46, 130, 0.7)',
-		'Carolina Panthers': 'rgba(0, 133, 202, 0.7)',
-		'Chicago Bears': 'rgba(11, 22, 42, 0.7)',
-		'Cincinnati Bengals': 'rgba(211, 47, 30, 0.7)',
-		'Cleveland Browns': 'rgba(211, 47, 30, 0.7)',
-		'Dallas Cowboys': 'rgba(0, 21, 50, 0.7)',
-		'Denver Broncos': 'rgba(0, 35, 76, 0.7)',
-		'Detroit Lions': 'rgba(0, 78, 137, 0.7)',
-		'Green Bay Packers': 'rgba(28, 45, 37, 0.7)',
-		'Houston Texans': 'rgba(0, 7, 28, 0.7)',
-		'Indianapolis Colts': 'rgba(1, 51, 105, 0.7)',
-		'Jacksonville Jaguars': 'rgba(0, 101, 118, 0.7)',
-		'Kansas City Chiefs': 'rgba(227, 24, 55, 0.7)',
-		'Los Angeles Chargers': 'rgba(0, 21, 50, 0.7)',
-		'Los Angeles Rams': 'rgba(0, 21, 50, 0.7)',
-		'Miami Dolphins': 'rgba(0, 142, 151, 0.7)',
-		'Minnesota Vikings': 'rgba(79, 38, 131, 0.7)',
-		'New England Patriots': 'rgba(0, 21, 50, 0.7)',
-		'New Orleans Saints': 'rgba(159, 137, 88, 0.7)',
-		'New York Giants': 'rgba(1, 35, 82, 0.7)',
-		'New York Jets': 'rgba(28, 45, 37, 0.7)',
-		'Oakland Raiders': 'rgba(166, 174, 176, 0.7)',
-		'Philadelphia Eagles': 'rgba(0, 49, 53, 0.7)',
-		'Pittsburgh Steelers': 'rgba(238, 173, 30, 0.7)',
-		'San Francisco 49ers': 'rgba(170, 0, 0, 0.7)',
-		'Seattle Seahawks': 'rgba(0, 21, 50, 0.7)',
-		'Tampa Bay Buccaneers': 'rgba(213, 10, 10, 0.7)',
-		'Tennessee Titans': 'rgba(0, 21, 50, 0.7)',
-		'Washington Redskins': 'rgba(63, 16, 16, 0.7)',
+		'ARI': 'rgba(135, 0, 39, 0.7)',
+		'ATL': 'rgba(163, 13, 45, 0.7)',
+		'BAL': 'rgba(26, 25, 95, 0.7)',
+		'BUF': 'rgba(12, 46, 130, 0.7)',
+		'CAR': 'rgba(0, 133, 202, 0.7)',
+		'CHI': 'rgba(11, 22, 42, 0.7)',
+		'CIN': 'rgba(211, 47, 30, 0.7)',
+		'CLE': 'rgba(211, 47, 30, 0.7)',
+		'DAL': 'rgba(0, 21, 50, 0.7)',
+		'DEN': 'rgba(0, 35, 76, 0.7)',
+		'DET': 'rgba(0, 78, 137, 0.7)',
+		'GB': 'rgba(28, 45, 37, 0.7)',
+		'HOU': 'rgba(0, 7, 28, 0.7)',
+		'IND': 'rgba(1, 51, 105, 0.7)',
+		'JAX': 'rgba(0, 101, 118, 0.7)',
+		'KC': 'rgba(227, 24, 55, 0.7)',
+		'LAC': 'rgba(0, 21, 50, 0.7)',
+		'LA': 'rgba(0, 21, 50, 0.7)',
+		'MIA': 'rgba(0, 142, 151, 0.7)',
+		'MIN': 'rgba(79, 38, 131, 0.7)',
+		'NE': 'rgba(0, 21, 50, 0.7)',
+		'NO': 'rgba(159, 137, 88, 0.7)',
+		'NYG': 'rgba(1, 35, 82, 0.7)',
+		'NYJ': 'rgba(28, 45, 37, 0.7)',
+		'OAK': 'rgba(166, 174, 176, 0.7)',
+		'PHI': 'rgba(0, 49, 53, 0.7)',
+		'PIT': 'rgba(238, 173, 30, 0.7)',
+		'SF': 'rgba(170, 0, 0, 0.7)',
+		'SEA': 'rgba(0, 21, 50, 0.7)',
+		'TB': 'rgba(213, 10, 10, 0.7)',
+		'TEN': 'rgba(0, 21, 50, 0.7)',
+		'WAS': 'rgba(63, 16, 16, 0.7)',
 	};
 	return team_colors[str_team_name];
 }

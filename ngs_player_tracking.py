@@ -6,6 +6,131 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
+## Start Big Data Bowl 2021 Functions
+#####################################
+
+'''
+Given the game info dictionary, return a string representation
+  of the game
+'''
+def game_info_to_string(game_info_dict):
+	home = list(game_info_dict['homeTeamAbbr'].values())[0]
+	away = list(game_info_dict['visitorTeamAbbr'].values())[0]
+	week = list(game_info_dict['week'].values())[0]
+	return home + ' vs ' + away + ': Week ' + str(week)
+
+'''
+given the file path of the broken out csv ngs data, return the list of all items
+'''
+def get_list_of_games(data_file_path):
+	list_of_weeks = [x for x in os.walk(data_file_path)]
+
+	#print (list_of_weeks[1])
+	list_of_games = []
+	for i in range(1, len(list_of_weeks)):
+		path_week = list_of_weeks[i][0]
+		game_files = [path_week + '/' + x for x in list_of_weeks[i][2]]
+		list_of_games.extend(game_files)
+
+	return list_of_games
+
+'''
+Get a dictionary, where the keys are gameIds, and values are a list of playIds of that game
+'''
+def get_games_plays_dict(data_file_path):
+	list_of_weeks = [x for x in os.walk(data_file_path)]
+	list_of_plays = []
+	for i in range(1, len(list_of_weeks)):
+		path_week = list_of_weeks[i][0]
+		play_files = [path_week + '/' + x for x in list_of_weeks[i][2]]
+		list_of_plays.extend(play_files)
+
+	list_of_game_ids = list(set([x.split('/')[-2] + '/' + x.split('/')[-1].split('_')[0] for x in list_of_plays]))
+
+	game_plays = {}
+	for game_id in list_of_game_ids:
+		list_of_g_play_ids = [x.split('/')[-1].split('_')[1][:-4] for x in list_of_plays if x.split('/')[-1].split('_')[0] == game_id]
+		game_plays[game_id] = list_of_g_play_ids
+
+	return game_plays
+
+'''
+Given the games dataframe and the uniqPlayId file path
+  return a dictionary with the game information
+'''
+def get_game_info_from_csv_name(df_games, csv_file_path, game_id=''):
+	if len(game_id) == 0:
+		csv_file = csv_file_path.split('/')[-1]
+		gameId = csv_file.split('_')[0]
+	else:
+		gameId = game_id
+	df_filtered = df_games[df_games['gameId']==int(gameId)]
+
+	return df_filtered.to_dict()
+
+'''
+Given the games dataframe and the uniqPlayId file path
+  return a dictionary with the play information
+'''
+def get_play_info_from_csv_name(df_plays, csv_file_path): 
+	csv_file = csv_file_path.split('/')[-1]
+	gameId = csv_file.split('_')[0]
+	playId = csv_file.split('_')[-1][:-4]
+	df_filtered = df_plays[(df_plays['playId']==int(playId)) & (df_plays['gameId']==int(gameId))]
+
+	return df_filtered.to_dict()
+
+'''
+Translate home/away to the actual team name (e.g. PHI)
+'''
+def team_nfl(team_val, home_team, away_team):
+	if team_val=='home':
+		return home_team
+	elif team_val=='away':
+		return away_team
+	elif team_val=='football':
+		return 'ball'
+	else:
+		return 'NA'
+    
+
+'''
+Translate this format into the one made previously from the old json ngs data
+'''    
+def convert_to_animation_format(df_play, df_plays, df_games):
+	#time converstion might be needed to strip away date (would store date in another field)
+
+	#displayName --> player_id
+	df_play = df_play.rename({'displayName': 'player_id'}, axis='columns')
+
+	#Football/football vs ball
+
+	#Create description from play_info
+	play_info = get_play_info_from_csv_name(df_plays, list(df_play['uniqPlayId'])[0] + '.csv')
+	play_description = list(play_info['playDescription'].values())[0]
+	play_description = play_description.replace("'", "")
+	df_play['description'] = play_description
+
+	#create team_nfl from team and game_info
+	game_info = get_game_info_from_csv_name(df_games, list(df_play['uniqPlayId'])[0] + '.csv')
+	home_team = list(game_info['homeTeamAbbr'].values())[0]
+	away_team = list(game_info['visitorTeamAbbr'].values())[0]
+	df_play['team_nfl'] = df_play['team'].apply(lambda x: team_nfl(x, home_team, away_team))
+
+	#uniqPlayId --> play_id
+
+	#remove ' from player_id
+	df_play['player_id'] = df_play['player_id'].apply(lambda x: x.replace("'", ""))
+
+	#Set original order
+	#time	x	y	s	a	dis	o	dir	event	nflId	displayName	jerseyNumber	position	frameId	team	gameId	playId	playDirection	route
+	df_play_reduced = df_play[['uniqPlayId', 'description', 'time', 'player_id', 'team', 'team_nfl', 'x', 'y']]
+
+	return df_play_reduced
+
+### End Big Data Bowl 2021 Functions
+####################################
+
 '''
 Function to convert the string time into something more usable
 example time: 2018-09-16T17:59:29.500
@@ -115,6 +240,10 @@ def extract_player_tracking_data(f_name = '', f_names = []):
 
 		df_all_tracking = pd.DataFrame.from_records(all_tracking, columns=df_cols)
 		times = sorted(list(set(list(df_all_tracking['time']))))
+		#print (df_all_tracking.head(20))
+		print (times)
+		print (df_all_tracking.columns)
+		df_all_tracking.to_csv('example_df_all_tracking.csv', index=False)
 		return df_all_tracking, times
 
 	elif (len(f_names) > 0):
@@ -149,6 +278,8 @@ def extract_player_tracking_data(f_name = '', f_names = []):
 
 		df_all_tracking = pd.DataFrame.from_records(all_tracking, columns=df_cols)
 		times = sorted(list(set(list(df_all_tracking['time']))))
+		#print (df_all_tracking.head(20))
+		#print (times)
 		return df_all_tracking, times
 
 	else:
