@@ -1,8 +1,8 @@
 # Sport Animation Overview
-A web application framework to visualize sports as a animation of player tracker data. The current build does this using a sample of data provided by the NFL NextGenStats from games during the 2018 season. To see a live version of this, you may try visiting this link, although if it is not responding, feel free to reach out to me as a I don't keep the ec2 instance it runs on up at all times.
+A web application framework to visualize sports as a animation of player tracker data. This branch was adapted from the master to read in the slightly altered data fromat provided by [NFL Big Data Bowl 2021](https://www.kaggle.com/c/nfl-big-data-bowl-2021/overview). To see a live version of this, you may try visiting this link, although if it is not responding, feel free to reach out to me as a I don't keep the ec2 instance it runs on up at all times.
 
 ## Installation and Use
-To try running this code, simply clone the repo, and ensure you have the libraries listed in the requirements.txt already in your local python environment, or as a part of a virtualenv. To find the sample data, you can also download that from [this repo](https://github.com/hatfieldm48/nfl_ngs). You will just need to edit `line 7` of the `app.py` file, to change the pointer for `ext_file_path`.
+To try running this code, simply clone the repo, and ensure you have the libraries listed in the requirements.txt already in your local python environment, or as a part of a virtualenv. You will just need to edit `line 10` of the `app.py` file, to change the pointer for `data_file_path`. Additionally, you will need to run the code in [this](https) script which will break out the `weeks[i].csv` data files into individual tracking csv data files for each play of each game. 
 
 From the cloned directory, running `python app.py` will create a local flask webapp where you can choose between these sample games, and then scroll through all the plays of that game to see each individual play animation.
 
