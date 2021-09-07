@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  app:
+    build: .
+    command: python app.py
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/python-flask
+      - C:/Users/572784/Documents/Personal/Sports Analytics/NFL/big_data_bowl_2021/:/big_data_bowl_2021
