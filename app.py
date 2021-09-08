@@ -7,7 +7,7 @@ import math
 
 app = Flask(__name__)
 ##ext_file_path = 'D:/Sports Analytics/sportradar/'
-data_file_path = '../../NFL/big_data_bowl_2021/'
+data_file_path = '../big_data_bowl_2021/' #'../../NFL/big_data_bowl_2021/'
 df_games = pd.read_csv(data_file_path + '/games.csv')
 df_players = pd.read_csv(data_file_path + '/players.csv')
 df_plays = pd.read_csv(data_file_path + '/plays.csv')
@@ -176,4 +176,4 @@ def select_game():
 	return render_template('select_game.html', **locals())
 
 if __name__ == "__main__":
-	app.run(debug=True)
+	app.run(host="0.0.0.0", debug=True)
